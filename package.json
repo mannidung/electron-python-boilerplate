@@ -1,16 +1,27 @@
 {
-  "name": "budget-software",
+  "name": "electron-python-boilerplate",
   "version": "0.1.0",
-  "description": "A budgeting software, inspired by YNAB",
+  "description": "A boilerplate for electron based GUIs with python backend",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "repository": "https://github.com/mannidung/electron-python-boilerplate",
+  "keywords": [
+    "Electron",
+    "Python",
+    "zerorpc",
+    "demo"
+  ],
   "author": "mannidung",
   "license": "MIT",
+  "dependencies": {
+    "zerorpc": "^0.9.8"
+  },
   "devDependencies": {
-    "electron": "^4.1.4"
+    "electron": "^4.1.4",
+    "electron-rebuild": "^1.8.4",
+    "electron-packager": "^13.1.1"
   }
 }
