@@ -1,0 +1,16 @@
+{
+  "name": "budget-software",
+  "version": "0.1.0",
+  "description": "A budgeting software, inspired by YNAB",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "mannidung",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^4.1.4"
+  }
+}
