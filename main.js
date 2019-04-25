@@ -2,6 +2,99 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 
+/*
+CREATE PYTHON PROCESS
+*/
+
+/**
+ * Path to the python environment directory.
+ */
+const PYTHON_ENVIRONMENT_DIR = "venv"
+
+/**
+ * Directory where the python server defined in PYTHON_SERVER resides.
+ */
+const PYTHON_SERVER_DIR = "server"
+
+/**
+ * Name of the python file containing the python server.
+ */
+const PYTHON_SERVER = "server.py"
+
+
+let pythonProcess = null
+let pythonPort = null
+
+/**
+ * Get the path to the python executable
+ * @returns Full path to the python executable
+ */
+function getPythonPath() {
+  return path.join(__dirname, PYTHON_ENVIRONMENT_DIR ,"bin", "python")
+}
+
+/**
+ * Get the path to the python program acting as server
+ * @returns Full path to the python server
+ */
+function getPythonServerPath() {
+  return path.join(__dirname, PYTHON_SERVER_DIR, PYTHON_SERVER)
+}
+
+/**
+ * Get port number for the python server process
+ * @returns Port number to use for the python server process
+ */
+function selectPort() {
+  pythonPort = 8484
+  return pythonPort
+}
+
+/**
+ * Creates and spawns the python server as a child process of the Node.js application
+ * @returns The child process containing the python server
+ */
+function createPythonProcess() {
+  let pythonScriptPath = getPythonServerPath()
+  let port = '' + selectPort()
+
+  pythonProcess = require('child_process').spawn(getPythonPath, [pythonScriptPath, port])
+
+  // Print stdout and stderr to console
+  pythonProcess.on('data', (data) => {
+    console.log(`stdout: ${data}`)
+  })
+
+  pythonProcess.on('data', (data) => {
+    console.log(`stderr: ${data}`)
+  })
+
+  pythonProcess.on('close', (code) => {
+    console.log(`child process exited with code ${code}`)
+  })
+
+  return pythonProcess
+}
+
+/**
+ * Kills the python process
+ * @returns Nothing
+ */
+function closePythonProcess() {
+  pythonProcess.kill()
+  pythonProcess = null
+  pythonPort = null
+}
+
+// Create python child processes
+app.on('ready', createPythonProcess())
+app.on('will-quit', closePythonProcess())
+
+
+/*
+ * WINDOW MANAGEMENT
+ */
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
