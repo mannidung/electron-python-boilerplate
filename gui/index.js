@@ -9,7 +9,6 @@ let output_div = document.querySelector('#output')
 input_field.addEventListener('input', () => {
     // Call API
     API.echo(input_field.value, (result) => {
-        console.log("In add events listener: " + result)
         output_div.textContent = result
     })
 })

@@ -47,7 +47,7 @@ function getPythonPath() {
  * @returns Full path to the python server
  */
 function getPythonServerPath() {
-  python_server_path = path.join(__dirname, "server", "server.py")
+  python_server_path = path.join(__dirname, PYTHON_SERVER_DIR, PYTHON_SERVER)
   if (DEBUG) {
     console.log("Python server path: " + python_server_path)
   }

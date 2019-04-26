@@ -26,7 +26,6 @@ const API = {
                 console.error(error)
                 return null
             } else {
-                console.log("In client.invoke: " + result)
                 callback(result)
             }
         })
