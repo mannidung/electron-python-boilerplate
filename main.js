@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
+const config = require('config')
 
 
 
@@ -9,19 +10,19 @@ CONFIGURATION
 */
 
 /** Should debug output be printed? */
-const DEBUG = true
+const DEBUG = config.get('Debug')
 
 /** Port to use for the zerorpc server */
-const SERVER_PORT = 8484
+const SERVER_PORT = config.get('ZeroRPC.connection.port')
 
 /** Path to the python environment directory. */
-const PYTHON_ENVIRONMENT_DIR = "venv_python3"
+const PYTHON_ENVIRONMENT_DIR = config.get('Python.path.environment_dir')
 
 /** Directory where the python server defined in PYTHON_SERVER resides. */
-const PYTHON_SERVER_DIR = "server"
+const PYTHON_SERVER_DIR = config.get('Python.path.server_dir')
 
 /** Name of the python file containing the python server. */
-const PYTHON_SERVER = "server.py"
+const PYTHON_SERVER = config.get('Python.path.server_script')
 
 /*
 CREATE PYTHON PROCESS

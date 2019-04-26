@@ -1,0 +1,16 @@
+{
+    "Debug": true,
+    "ZeroRPC": {
+        "connection": {
+            "host": "127.0.0.1",
+            "port": 8484
+        }
+    },
+    "Python": {
+        "path": {
+            "environment_dir": "venv_python3",
+            "server_dir": "server",
+            "server_script": "server.py"
+        }
+    }
+}

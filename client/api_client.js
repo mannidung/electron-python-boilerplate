@@ -1,17 +1,12 @@
 const zerorpc = require('zerorpc')
-
-/** Address to use for the zerorpc server */
-const SERVER_ADDRESS = "127.0.0.1"
-
-/** Port to use for the zerorpc server */
-const SERVER_PORT = 8484
+const config = require('config')
 
 // Create zerorpc client
 let client = new zerorpc.Client()
 
 // Connect to the zerorpc server which is run in python
-client.connect("tcp://" + SERVER_ADDRESS
-                + ":" + SERVER_PORT)
+client.connect("tcp://" + config.get('ZeroRPC.connection.host')
+                + ":" + config.get('ZeroRPC.connection.port'))
 
 const API = {
     /**
