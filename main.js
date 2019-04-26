@@ -2,25 +2,30 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 
+
+
+/*
+CONFIGURATION
+*/
+
+/** Should debug output be printed? */
+const DEBUG = true
+
+/** Port to use for the zerorpc server */
+const SERVER_PORT = 8484
+
+/** Path to the python environment directory. */
+const PYTHON_ENVIRONMENT_DIR = "venv_python3"
+
+/** Directory where the python server defined in PYTHON_SERVER resides. */
+const PYTHON_SERVER_DIR = "server"
+
+/** Name of the python file containing the python server. */
+const PYTHON_SERVER = "server.py"
+
 /*
 CREATE PYTHON PROCESS
 */
-
-/**
- * Path to the python environment directory.
- */
-const PYTHON_ENVIRONMENT_DIR = "venv"
-
-/**
- * Directory where the python server defined in PYTHON_SERVER resides.
- */
-const PYTHON_SERVER_DIR = "server"
-
-/**
- * Name of the python file containing the python server.
- */
-const PYTHON_SERVER = "server.py"
-
 
 let pythonProcess = null
 let pythonPort = null
@@ -30,7 +35,11 @@ let pythonPort = null
  * @returns Full path to the python executable
  */
 function getPythonPath() {
-  return path.join(__dirname, PYTHON_ENVIRONMENT_DIR ,"bin", "python")
+  python_path = path.join(__dirname, PYTHON_ENVIRONMENT_DIR ,"bin", "python")
+  if (DEBUG) {
+    console.log("Python path: " + python_path)
+  }
+  return python_path
 }
 
 /**
@@ -38,7 +47,11 @@ function getPythonPath() {
  * @returns Full path to the python server
  */
 function getPythonServerPath() {
-  return path.join(__dirname, PYTHON_SERVER_DIR, PYTHON_SERVER)
+  python_server_path = path.join(__dirname, "server", "server.py")
+  if (DEBUG) {
+    console.log("Python server path: " + python_server_path)
+  }
+  return python_server_path
 }
 
 /**
@@ -46,7 +59,7 @@ function getPythonServerPath() {
  * @returns Port number to use for the python server process
  */
 function selectPort() {
-  pythonPort = 8484
+  pythonPort = SERVER_PORT
   return pythonPort
 }
 
@@ -55,17 +68,18 @@ function selectPort() {
  * @returns The child process containing the python server
  */
 function createPythonProcess() {
+  let pythonPath = getPythonPath()
   let pythonScriptPath = getPythonServerPath()
   let port = '' + selectPort()
 
-  pythonProcess = require('child_process').spawn(getPythonPath, [pythonScriptPath, port])
+  pythonProcess = require('child_process').spawn(pythonPath, [pythonScriptPath, port])
 
   // Print stdout and stderr to console
-  pythonProcess.on('data', (data) => {
+  pythonProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`)
   })
 
-  pythonProcess.on('data', (data) => {
+  pythonProcess.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`)
   })
 
@@ -87,8 +101,8 @@ function closePythonProcess() {
 }
 
 // Create python child processes
-app.on('ready', createPythonProcess())
-app.on('will-quit', closePythonProcess())
+app.on('ready', createPythonProcess)
+app.on('will-quit', closePythonProcess)
 
 
 /*
@@ -113,7 +127,9 @@ function createWindow () {
   mainWindow.loadFile(path.join('gui', 'index.html'))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  if (DEBUG) {
+    mainWindow.webContents.openDevTools()
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
