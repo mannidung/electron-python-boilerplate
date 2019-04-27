@@ -21,7 +21,11 @@ function getPythonServerPath() {
   if (!guessPackaged()) {
     python_server_path = path.join(__dirname, config.PYTHON_SERVER_DIR, config.PYTHON_SERVER + '.py')
   } else { // Return path to the compiled/packed python server
-    python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER)
+    if (process.platform === 'win32') {
+      python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER + '.exe')
+    } else {
+      python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER)
+    }
   }
   if (config.DEBUG) {
     console.log("Guess packaged() returned: " + guessPackaged())

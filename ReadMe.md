@@ -21,3 +21,9 @@ It is recommended that you set up two virtual environments for this project. One
 Before every _npm install_ the command _electron-rebuild_ (node_modules/.bin/electron-rebuild) needs to be executed. This small script bundles the two commands.
 
 __NOTE__: Before running this script, make sure that your Python2 virtual environment is activated.
+
+## Under Windows
+
+__NOTE__:
+* In order to install pyinstaller you can't use _pip_ version 19.1. You need to use 18.1 or lower. This is due to a bug in pip 19.1.
+* In order to install the node module zerorpc you need the MSBuild tools installed. You can install them by running the command _npm install --global windows-build-tools_ in PowerShell as an administrator.
