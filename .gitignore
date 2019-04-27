@@ -5,9 +5,9 @@ node_modules
 .vscode
 
 # Ignore files created by the pyinstaller
-python_build
-server/server.spec
-server/build
+build
+python_dist
+server.spec
 
 # Ignore files created by electron-packager
 release-builds

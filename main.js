@@ -22,9 +22,9 @@ function getPythonServerPath() {
     python_server_path = path.join(__dirname, config.PYTHON_SERVER_DIR, config.PYTHON_SERVER + '.py')
   } else { // Return path to the compiled/packed python server
     if (process.platform === 'win32') {
-      python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER + '.exe')
+      python_server_path = path.join(__dirname, config.PYTHON_DIST_DIR, config.PYTHON_SERVER + '.exe')
     } else {
-      python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER)
+      python_server_path = path.join(__dirname, config.PYTHON_DIST_DIR, config.PYTHON_SERVER)
     }
   }
   if (config.DEBUG) {
@@ -48,7 +48,7 @@ function selectPort() {
  * @returns True if guessed that the app has been packaged.
  */
 function guessPackaged() {
-  fullPath = path.join(__dirname, config.PYTHON_BUILD_DIR) // Why does this work?
+  fullPath = path.join(__dirname, config.PYTHON_DIST_DIR) // Why does this work?
   if (config.DEBUG) {
     console.log("Guess packaged path: " + fullPath)
   }

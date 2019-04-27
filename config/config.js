@@ -12,7 +12,7 @@ let ZERORPC_HOST = "127.0.0.1"
 let ZERORPC_PORT = 8484
 
 /** Path to the pyinstaller build directory. */
-let PYTHON_BUILD_DIR = "python_build"
+let PYTHON_DIST_DIR = "python_dist"
 
 /** Directory where the python server defined in PYTHON_SERVER resides. */
 let PYTHON_SERVER_DIR = "server"
@@ -26,7 +26,7 @@ module.exports = {
     DEBUG,
     ZERORPC_HOST,
     ZERORPC_PORT,
-    PYTHON_BUILD_DIR,
+    PYTHON_DIST_DIR,
     PYTHON_SERVER_DIR,
     PYTHON_SERVER
 }
