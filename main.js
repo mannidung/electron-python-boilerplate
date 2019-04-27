@@ -1,28 +1,9 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
-const config = require('config')
+const fs = require('fs')
+const config = require('./config/config')
 
-
-
-/*
-CONFIGURATION
-*/
-
-/** Should debug output be printed? */
-const DEBUG = config.get('Debug')
-
-/** Port to use for the zerorpc server */
-const SERVER_PORT = config.get('ZeroRPC.connection.port')
-
-/** Path to the python environment directory. */
-const PYTHON_ENVIRONMENT_DIR = config.get('Python.path.environment_dir')
-
-/** Directory where the python server defined in PYTHON_SERVER resides. */
-const PYTHON_SERVER_DIR = config.get('Python.path.server_dir')
-
-/** Name of the python file containing the python server. */
-const PYTHON_SERVER = config.get('Python.path.server_script')
 
 /*
 CREATE PYTHON PROCESS
@@ -32,24 +13,18 @@ let pythonProcess = null
 let pythonPort = null
 
 /**
- * Get the path to the python executable
- * @returns Full path to the python executable
- */
-function getPythonPath() {
-  python_path = path.join(__dirname, PYTHON_ENVIRONMENT_DIR ,"bin", "python")
-  if (DEBUG) {
-    console.log("Python path: " + python_path)
-  }
-  return python_path
-}
-
-/**
  * Get the path to the python program acting as server
  * @returns Full path to the python server
  */
 function getPythonServerPath() {
-  python_server_path = path.join(__dirname, PYTHON_SERVER_DIR, PYTHON_SERVER)
-  if (DEBUG) {
+  // If the python server hasn't been packed, return path to the unpacked .py-file
+  if (!guessPackaged()) {
+    python_server_path = path.join(__dirname, config.PYTHON_SERVER_DIR, config.PYTHON_SERVER + '.py')
+  } else { // Return path to the compiled/packed python server
+    python_server_path = path.join(__dirname, config.PYTHON_BUILD_DIR, config.PYTHON_SERVER)
+  }
+  if (config.DEBUG) {
+    console.log("Guess packaged() returned: " + guessPackaged())
     console.log("Python server path: " + python_server_path)
   }
   return python_server_path
@@ -60,8 +35,20 @@ function getPythonServerPath() {
  * @returns Port number to use for the python server process
  */
 function selectPort() {
-  pythonPort = SERVER_PORT
+  pythonPort = config.ZERORPC_PORT
   return pythonPort
+}
+
+/**
+ * Check if the app has been packaged or not.
+ * @returns True if guessed that the app has been packaged.
+ */
+function guessPackaged() {
+  fullPath = path.join(__dirname, config.PYTHON_BUILD_DIR) // Why does this work?
+  if (config.DEBUG) {
+    console.log("Guess packaged path: " + fullPath)
+  }
+  return fs.existsSync(fullPath)
 }
 
 /**
@@ -69,11 +56,14 @@ function selectPort() {
  * @returns The child process containing the python server
  */
 function createPythonProcess() {
-  let pythonPath = getPythonPath()
   let pythonScriptPath = getPythonServerPath()
   let port = '' + selectPort()
 
-  pythonProcess = require('child_process').spawn(pythonPath, [pythonScriptPath, port])
+  if (guessPackaged()) { // If the app has been packaged, use execFile instead of spawn
+    pythonProcess = require('child_process').execFile(pythonScriptPath, [port])
+  } else {
+    pythonProcess = require('child_process').spawn('python', [pythonScriptPath, port])
+  }
 
   // Print stdout and stderr to console
   pythonProcess.stdout.on('data', (data) => {
@@ -115,6 +105,7 @@ app.on('will-quit', closePythonProcess)
 let mainWindow
 
 function createWindow () {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -128,7 +119,7 @@ function createWindow () {
   mainWindow.loadFile(path.join('gui', 'index.html'))
 
   // Open the DevTools.
-  if (DEBUG) {
+  if (config.DEBUG) {
     mainWindow.webContents.openDevTools()
   }
 

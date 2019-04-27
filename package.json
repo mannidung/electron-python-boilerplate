@@ -17,7 +17,6 @@
   "author": "mannidung",
   "license": "MIT",
   "dependencies": {
-    "config": "^3.1.0",
     "zerorpc": "^0.9.8"
   },
   "devDependencies": {

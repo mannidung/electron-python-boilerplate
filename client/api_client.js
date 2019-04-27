@@ -1,12 +1,12 @@
 const zerorpc = require('zerorpc')
-const config = require('config')
+const config = require('../config/config')
 
 // Create zerorpc client
 let client = new zerorpc.Client()
 
 // Connect to the zerorpc server which is run in python
-client.connect("tcp://" + config.get('ZeroRPC.connection.host')
-                + ":" + config.get('ZeroRPC.connection.port'))
+client.connect("tcp://" + config.ZERORPC_HOST
+                + ":" + config.ZERORPC_PORT)
 
 const API = {
     /**
