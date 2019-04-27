@@ -1,4 +1,13 @@
 venv_python2.7
 venv_python3
 node_modules
+*__pycache__*
 .vscode
+
+# Ignore files created by the pyinstaller
+python_build
+server/server.spec
+server/build
+
+# Ignore files created by electron-packager
+release-builds
