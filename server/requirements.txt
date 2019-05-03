@@ -1,3 +1,2 @@
 zerorpc
-pypiwin32
 pyinstaller
